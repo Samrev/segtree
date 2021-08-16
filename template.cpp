@@ -106,7 +106,6 @@ int main()
     // g++ -o output prac.cpp
     // .\output
     lli t=1;//cin>>t;
-    //cout<<msb(1)<<" ";
     while(t--)
     {
         solve();
