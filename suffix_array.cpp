@@ -1,16 +1,18 @@
-#include <bits/stdc++.h>
-using namespace std;
-typedef long long int lli;
 class suffix_array
 {
     //$ is added here only, so first create suffix array then calculate size of string
     public:
     vector<lli> p,c;
+    string s;
+    vector<lli> lcp;
     void init(string &t){
+        s=t;
         t+='$';
-        lli n = t.size();
+        s+='$';
+        lli n = s.size();
         p.assign(n,0);
         c.assign(n,0);
+        lcp.assign(n,0);
     }
     void radix_sort(vector<lli> &p, vector<lli> &c){
         lli n = p.size();
@@ -23,7 +25,7 @@ class suffix_array
         for(lli i=1;i<=n-1;i++){
             pos[i] = pos[i-1]+cnt[i-1];
         }
-
+ 
         vector<lli> p_new(n);
         for(lli i=0;i<=n-1;i++){
             lli x = c[p[i]];
@@ -32,13 +34,13 @@ class suffix_array
         }
         p = p_new;
     }
-    void build_suffix_array(string t){
+    void build_suffix_array(){
         lli n = p.size();
         {
             //k=0
             vector<pair<char,lli>> a(n);
             for(lli i=0;i<=n-1;i++){
-                a[i] = {t[i],i};
+                a[i] = {s[i],i};
             }
             sort(a.begin(),a.end());
             for(lli i=0;i<=n-1;i++){
@@ -54,7 +56,7 @@ class suffix_array
                 }
             }
         }
-
+ 
         lli k = 0;
         {
             //k->k+1
@@ -80,5 +82,17 @@ class suffix_array
             }
         } 
     }    
-
+    void build_lcp(){
+        lli k = 0;
+        lli n = s.size();
+        for(lli i=0;i<=n-2;i++){
+            lli pi = c[i];
+            lli j = p[pi-1];
+            while((i+k)<n && (j+k)<n && s[i+k]==s[j+k]){
+                k++;
+            }
+            lcp[pi]=k;
+            k = max(k-1,lli(0));
+        }
+    }
 };
